@@ -1,54 +1,21 @@
-import 'dart:convert';
-
+import 'package:blinkapp/provider/auth/login_provider.dart';
+import 'package:blinkapp/services/api/auth/login_api.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:http/http.dart' as http;
 
-class LoginScreen extends HookWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
-  Future signIn(password, email) async {
-    final client = http.Client();
-    try {
-      var url =
-          Uri.parse("https://rest-prod.immedia-semi.com/api/v5/account/login");
-      var response = await client.post(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: json.encode(
-          {
-            "password": password.text.trim(),
-            "email": email.text.trim(),
-          },
-        ),
-      );
-      debugPrint(response.body);
-      return response;
-    } catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      client.close();
-    }
-  }
+class LoginScreen extends HookConsumerWidget {
+  const LoginScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final loginApi = useMemoized((() => LoginApi(ref.read)), []);
+    final isLoading = ref.watch(isLoadingProvider).isLoading;
+
     final emailController = useTextEditingController(text: "");
     final passwordController = useTextEditingController(text: "");
-
-    // useEffect(() {
-    //   emailController.addListener(() {
-    //     emailController.text.trim();
-    //   });
-    //   passwordController.addListener(() {
-    //     passwordController.text.trim();
-    //   });
-    // }, [
-    //   emailController,
-    //   passwordController,
-    // ]);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -111,9 +78,12 @@ class LoginScreen extends HookWidget {
                         child: IconButton(
                           color: Colors.black,
                           onPressed: () {
-                            signIn(passwordController, emailController);
+                            loginApi.signIn(
+                                passwordController, emailController);
                           },
-                          icon: const Icon(Icons.arrow_forward),
+                          icon: !isLoading
+                              ? const Icon(Icons.arrow_forward)
+                              : const CircularProgressIndicator.adaptive(),
                         ),
                       ),
                     ],

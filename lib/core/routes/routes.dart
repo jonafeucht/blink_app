@@ -1,4 +1,4 @@
-import 'package:blinkapp/services/auth/login.dart';
+import 'package:blinkapp/views/auth/login_view.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class Routes {

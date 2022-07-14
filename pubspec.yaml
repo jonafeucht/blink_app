@@ -18,7 +18,8 @@ dependencies:
   # SERVICES END
 
   # RIVERPOD START
-  flutter_riverpod: ^2.0.0-dev.9
+  #flutter_riverpod: ^2.0.0-dev.9
+  hooks_riverpod: ^2.0.0-dev.9
   flutter_hooks: ^0.18.5+1
   # RIVERPOD END
 
