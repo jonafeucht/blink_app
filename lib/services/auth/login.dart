@@ -1,20 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:http/http.dart' as http;
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends HookWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
-  @override
-  State<LoginScreen> createState() => LoginState();
-}
-
-class LoginState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  Future signIn() async {
+  Future signIn(password, email) async {
     final client = http.Client();
     try {
       var url =
@@ -26,8 +19,8 @@ class LoginState extends State<LoginScreen> {
         },
         body: json.encode(
           {
-            "password": _passwordController.text.trim(),
-            "email": _emailController.text.trim(),
+            "password": password.text.trim(),
+            "email": email.text.trim(),
           },
         ),
       );
@@ -42,6 +35,21 @@ class LoginState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final emailController = useTextEditingController(text: "");
+    final passwordController = useTextEditingController(text: "");
+
+    useEffect(() {
+      emailController.addListener(() {
+        emailController.text.trim();
+      });
+      passwordController.addListener(() {
+        passwordController.text.trim();
+      });
+    }, [
+      emailController,
+      passwordController,
+    ]);
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: Center(
@@ -62,7 +70,7 @@ class LoginState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 40),
                   TextField(
-                    controller: _emailController,
+                    controller: emailController,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -74,7 +82,7 @@ class LoginState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 10),
                   TextField(
-                    controller: _passwordController,
+                    controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -103,7 +111,7 @@ class LoginState extends State<LoginScreen> {
                         child: IconButton(
                           color: Colors.black,
                           onPressed: () {
-                            signIn();
+                            signIn(passwordController, emailController);
                           },
                           icon: const Icon(Icons.arrow_forward),
                         ),
