@@ -38,17 +38,17 @@ class LoginScreen extends HookWidget {
     final emailController = useTextEditingController(text: "");
     final passwordController = useTextEditingController(text: "");
 
-    useEffect(() {
-      emailController.addListener(() {
-        emailController.text.trim();
-      });
-      passwordController.addListener(() {
-        passwordController.text.trim();
-      });
-    }, [
-      emailController,
-      passwordController,
-    ]);
+    // useEffect(() {
+    //   emailController.addListener(() {
+    //     emailController.text.trim();
+    //   });
+    //   passwordController.addListener(() {
+    //     passwordController.text.trim();
+    //   });
+    // }, [
+    //   emailController,
+    //   passwordController,
+    // ]);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
