@@ -1,4 +1,4 @@
-import 'package:blinkapp/provider/auth/login_provider.dart';
+import 'package:blinkapp/providers/auth/login_provider.dart';
 import 'package:blinkapp/services/api/auth/login_api.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,8 +30,8 @@ class LoginScreen extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.network(
-                    "https://images.squarespace-cdn.com/content/v1/5e21c06a08d2fc435f20e6c5/64f527b9-86c8-447e-9759-04031ea53761/blink_logo_smile_blue.png",
+                  Image.asset(
+                    "assets/images/blink_logo_smile_blue.png",
                     color: Colors.black,
                     width: 120,
                   ),
@@ -79,7 +79,7 @@ class LoginScreen extends HookConsumerWidget {
                           color: Colors.black,
                           onPressed: () {
                             loginApi.signIn(
-                                passwordController, emailController);
+                                passwordController, emailController, context);
                           },
                           icon: !isLoading
                               ? const Icon(Icons.arrow_forward)

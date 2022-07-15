@@ -1,22 +1,22 @@
 import 'package:blinkapp/core/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+// provider stores the instance SharedPreferences
+final sharedPreferencesProvider = Provider<SharedPreferences>((_) {
+  return throw UnimplementedError();
+});
 Future<void> main() async {
-  runApp(const ProviderScope(child: MyApp()));
-}
+  WidgetsFlutterBinding.ensureInitialized();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routeInformationProvider: Routes.router.routeInformationProvider,
-      routeInformationParser: Routes.router.routeInformationParser,
-      routerDelegate: Routes.router.routerDelegate,
-      debugShowCheckedModeBanner: false,
-      title: 'Blink',
-      theme: ThemeData(),
-    );
-  }
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+      ],
+      child: const BlinkAppRoute(),
+    ),
+  );
 }
